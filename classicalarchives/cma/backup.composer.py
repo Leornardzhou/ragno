@@ -114,7 +114,7 @@ class Work:
         self.goto_page_by_name('last')
         self.npage = self.get_current_page_id()
         self.goto_page_by_name('first')
-        # utils.wait(2)  # allow time to update the page elements in the html
+        utils.wait(2)  # allow time to update the page elements in the html
         self.page_list = []
 
 
@@ -151,17 +151,17 @@ class Work:
 
     def expand(self):
         if self.is_folded():
-            yloc = self.work_elem.location['y']-200
-            self.driver.execute_script("window.scrollTo(0, {});".format(yloc))
             self.driver.execute_script("arguments[0].click();",
                                        self.work_elem)
             # self.work_elem.click()
+            self.driver.execute_script("window.scrollBy(0, 200);")
 
 
     def collapse(self):
         if not self.is_folded():
             self.driver.execute_script("arguments[0].click();",
                                        self.work_elem)
+            # self.work_elem.click()
 
 
     def goto_page_by_name(self, name):
@@ -170,7 +170,7 @@ class Work:
             '..//*[@class="yui-pg-{}"]'.format(name))
         if page.tag_name == 'a':
             self.driver.execute_script("arguments[0].click();", page)
-            utils.wait(3)
+#            page.click()
 
 
     def goto_page_by_id(self, page_id):
@@ -215,9 +215,9 @@ class Work:
             ntrack = 0
             for i in range(self.npage):
                 self.goto_page_by_id(i+1)
-                # utils.wait(2)  # allow time to update the page elements in the html
+                utils.wait(2)  # allow time to update the page elements in the html
                 page_elem = self.get_current_page_elem()
-                # utils.wait(2)  # allow time to update the page elements in the html
+                utils.wait(2)  # allow time to update the page elements in the html
                 page = Page(self.driver, page_elem)
                 page.get_all_tracks()
                 page_list.append(page)
@@ -305,7 +305,7 @@ class Page:
                 length = None
                 download_elem = None
                 for subelem in elem.find_elements_by_xpath('./*'):
-                    # utils.wait(5)
+                    utils.wait(5)
                     if subelem.get_attribute('class') == 'tlEnd tlPart':
                         title_prefix = subelem.text + ' '
                         is_header = True

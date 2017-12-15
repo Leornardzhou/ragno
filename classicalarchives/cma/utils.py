@@ -58,6 +58,7 @@ def wait(time1, time2=None, verbose=False):
         wait_time = time1 + random.random() * abs(time2 - time1)
     if verbose:
         print_message('wait for {0:.2f} seconds ...'.format(wait_time))
+    time.sleep(wait_time)
 
 
 def save_screenshot(driver, fname):
