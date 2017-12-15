@@ -94,6 +94,8 @@ class Composer:
                     'expect {} found {}'
                     .format(self.composer_id, self.name, self.ntrack,
                             ntrack, nretry))
+            if nretry == 20:
+                sys.exit(1)
 
         self.work_list = work_list
 
@@ -237,6 +239,8 @@ class Work:
                     'expect {} found {} (#retry = {})'
                     .format(self.work_id, self.title, self.ntrack,
                             ntrack, nretry))
+            if nretry == 20:
+                sys.exit(1)
 
         self.page_list = page_list
 
@@ -325,6 +329,8 @@ class Page:
                 'expect {} found {} (#retry = {})'
                 .format(self.page_id, self.contributor, self.ntrack,
                         len(track_list), nretry))
+            if nretry == 20:
+                sys.exit(1)
 
         self.track_list = track_list
 
@@ -377,7 +383,7 @@ if __name__ == '__main__':
     composer_id = sys.argv[1]
     out_json = sys.argv[2]
 
-    driver = utils.start_driver('phantomjs')
+    driver = utils.start_driver('phantomjs', wait_time=10)
     try:
         c = Composer(driver, composer_id)
         c.get_all_works()

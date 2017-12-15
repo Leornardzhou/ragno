@@ -31,5 +31,8 @@ def test_all_composers():
 
 if __name__ == '__main__':
 
+    test_login()
+
+
     # test_login()
     # test_all_composers()
