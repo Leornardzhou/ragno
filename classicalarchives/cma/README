@@ -1,3 +1,17 @@
 scroll down also
 add wait time between each page
 check if output already exists
+
+open GUI remotely
+https://askubuntu.com/questions/47642/how-to-start-a-gui-software-on-a-remote-linux-pc-via-ssh
+DISPLAY=:0 (nohup) python3 xxxx
+or export DISPLAY=:0
+
+
+
+need to have following GUI driver in PATH (e.g. /usr/local/bin)
+geckodriver (https://github.com/mozilla/geckodriver/releases)
+chromedriver (https://sites.google.com/a/chromium.org/chromedriver/downloads)
+
+for linux, google-chrome-stable is used by webdriver (instead of chromedriver)
+

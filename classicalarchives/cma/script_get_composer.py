@@ -3,7 +3,7 @@ import utils
 import sys
 import os
 
-todo_list = 'todo.composer.list'
+todo_list = 'composers.list'
 
 driver = utils.start_driver('chrome', wait_time=5)
 

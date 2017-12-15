@@ -26,8 +26,8 @@ def close_driver(driver, verbose=False):
     driver.quit()
 
 
-def open_url(driver, url, verbose=False, wait_time=0):
-    if driver.current_url == url:
+def open_url(driver, url, verbose=False, wait_time=0, reopen=False):
+    if driver.current_url == url and reopen == False:
         return
     if verbose:
         print_message('openning URL: ' + url)

@@ -59,7 +59,9 @@ def get_all_composers(driver, fname_out=None, verbose=True):
 if __name__ == '__main__':
 
     import utils
+    import sys
+    out_name = sys.argv[1]
 
     driver = utils.start_driver('phantomjs')
-    get_all_composers(driver, "composers/all.json")
+    get_all_composers(driver, out_name)
     driver.close()
