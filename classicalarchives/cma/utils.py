@@ -5,17 +5,48 @@ import sys
 import json
 import time
 import random
+import requests
 
 
-def start_driver(driver_name, wait_time=5, verbose=False):
+def start_driver(driver_name, wait_time=5, verbose=False, download_dir=None):
+
     if verbose:
         print_message('open {} browser'.format(driver_name))
+
     if driver_name == 'chrome':
-        driver = webdriver.Chrome()
+        if download_dir:
+            opts = webdriver.ChromeOptions()
+            prefs = {
+                "download.default_directory": download_dir,
+                'safebrowsing.enabled': True,
+            }
+            opts.add_experimental_option('prefs', prefs)
+            opts.add_argument(
+                '--safebrowsing-disable-download-protection'
+            )
+            driver = webdriver.Chrome(chrome_options=opts)
+        else:
+            driver = webdriver.Chrome()
+
     elif driver_name == 'phantomjs':
+        # does not support download dir sepcification
         driver = webdriver.PhantomJS()
+
     elif driver_name == 'firefox':
-        driver = webdriver.Firefox()
+        if download_dir:
+            profile = webdriver.FirefoxProfile()
+            profile.set_preference("browser.download.folderList", 2)
+            profile.set_preference("browser.download.manager.showWhenStarting",
+                                   False)
+            profile.set_preference("browser.download.dir", download_dir)
+            profile.set_preference("browser.helperApps.neverAsk.saveToDisk",
+                                   "application/octet-stream")
+            profile.set_preference("browser.helperApps.neverAsk.openFile",
+                                   "application/octet-stream")
+            driver = webdriver.Firefox(firefox_profile=profile)
+        else:
+            driver = webdriver.Firefox()
+
     driver.implicitly_wait(wait_time)
     return driver
 
@@ -32,6 +63,26 @@ def open_url(driver, url, verbose=False, wait_time=0, reopen=False):
     if verbose:
         print_message('openning URL: ' + url)
     driver.get(url)
+
+
+def save_html(driver, fname, verbose=True):
+    if verbose:
+        print_message('writing html {}'.format(fname))
+    elem = driver.find_element_by_xpath("//*")
+    source_code = elem.get_attribute("outerHTML")
+    with open(fname, 'w') as f:
+        print(source_code, file=f)
+
+
+def download_file(url, fname, verbose=True, chunk_size=1024):
+    if verbose:
+        print_message('saving {} to {}'.format(url, fname))
+    r = requests.get(url, stream=True)
+    with open(fname, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=chunk_size):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+    r.close()
 
 
 def print_message(msg):
