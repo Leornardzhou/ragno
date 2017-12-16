@@ -57,7 +57,7 @@ class Composer:
 
     def get_work_by_id(self, work_id):
         work_elem = self.driver.find_element_by_xpath(
-            '//div[@id="wMidi"]//a[@id="{}"]'.format(work_id))
+            '//div[@id="wMidi"]//a[@id="work_{}"]'.format(work_id))
         return Work(self.driver, work_elem)
 
 
@@ -334,12 +334,12 @@ class Page:
 
         self.track_list = track_list
 
+
     def get_track_by_id(self, track_id):
         # track_id = 1..ntrack (1-based)
-        if len(self.track_list):
-            return self.track_list[track_id-1]
-        else:
-            return None
+        if len(self.track_list) == 0:
+            self.get_all_tracks()
+        return self.track_list[track_id-1]
 
 
 class Track:
@@ -355,7 +355,7 @@ class Track:
     def download(self):
         self.driver.execute_script("arguments[0].click();",
                                    self.download_elem)
-        # self.download_elem.click()
+        self.download_elem.click()
 
 
     def __str__(self):
@@ -389,7 +389,7 @@ if __name__ == '__main__':
         c.get_all_works()
         c.format_json(fname_out=out_json)
 
-        # w = c.get_work_by_id('work_9458')
+        # w = c.get_work_by_id(9458)
         # w.get_all_pages()
         # w.format_json(fname_out=out_json)
 
