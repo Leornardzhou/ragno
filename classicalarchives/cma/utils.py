@@ -6,6 +6,7 @@ import json
 import time
 import random
 import requests
+import os
 
 
 def start_driver(driver_name, wait_time=5, verbose=False, download_dir=None):
@@ -90,6 +91,8 @@ def print_message(msg):
 
 
 def save_json(data, fname, verbose=True):
+    dirname = fname.rsplit('/',1)[0]
+    os.makedirs(dirname)
     if verbose:
         print_message('writing json {}'.format(fname))
     with open(fname, 'w') as f:
