@@ -3,6 +3,7 @@ import course
 import session
 import sys
 import os
+import pathlib
 
 
 def get_course(ncourse_max):
@@ -10,7 +11,8 @@ def get_course(ncourse_max):
     cache_dir = 'cache'
 
     driver = utils.start_driver('chrome', download_dir=cache_dir)
-    session.login(driver, '/Users/zyhuang/plst.credential.json')
+    home_dir = pathlib.Path.home()
+    session.login(driver, home_dir + '/plst.credential.json')
     utils.wait(3)
 
     ncourse = 1
