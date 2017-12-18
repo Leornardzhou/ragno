@@ -11,7 +11,7 @@ def get_course(ncourse_max):
     cache_dir = 'cache'
 
     driver = utils.start_driver('chrome', download_dir=cache_dir)
-    home_dir = pathlib.Path.home()
+    home_dir = str(pathlib.Path.home())
     session.login(driver, home_dir + '/plst.credential.json')
     utils.wait(3)
 
