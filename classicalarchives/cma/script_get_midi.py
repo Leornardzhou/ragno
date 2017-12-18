@@ -4,10 +4,12 @@ import os
 import session
 import sys
 import download
+import pathlib
 
 
 driver = utils.start_driver('chrome')
-session.login(driver, '/Users/zyhuang/cma.credential.json')
+home_dir = str(pathlib.Path.home())
+session.login(driver, home_dir + '/cma.credential.json')
 utils.wait(3)
 
 ntrack = 0

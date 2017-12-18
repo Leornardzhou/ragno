@@ -1,6 +1,8 @@
 import utils
 import composer
 import os
+import pathlib
+
 
 host = 'https://www.classicalarchives.com'
 
@@ -83,7 +85,8 @@ if __name__ == '__main__':
     import sys
 
     driver = utils.start_driver('chrome')
-    session.login(driver, '/Users/zyhuang/cma.credential.json')
+    home_dir = str(pathlib.Path.home())
+    session.login(driver, home_dir + '/cma.credential.json')
 
     composer_id, work_id, page_id, track_id = [int(x) for x in
                                                sys.argv[1].split(',')]
