@@ -7,7 +7,8 @@ import download
 import pathlib
 
 
-driver = utils.start_driver('chrome')
+#driver = utils.start_driver('chrome')
+driver = utils.start_driver('phantomjs')
 home_dir = str(pathlib.Path.home())
 session.login(driver, home_dir + '/cma.credential.json')
 utils.wait(3)
