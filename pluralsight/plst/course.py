@@ -113,6 +113,10 @@ class Course:
 
         # get downloaded temporary file
         tmp_fname = ''
+        wait_time = 3   # check download dir every wait_time seconds
+        wait_time_max = 10*60   # give up after wait_time_max seconds
+        nretry = 0
+        nretry_max = wait_time_max / wait_time
         while True:
             tmp_flist = [self.cache_dir + '/' + x
                               for x in os.listdir(self.cache_dir)
@@ -125,6 +129,13 @@ class Course:
                 break
 
             utils.wait(3)
+            nretry += 1
+
+            if nretry == nretry_max:
+                utils.print_message('*ERROR*: download time out. retry later!')
+                utils.clean_dir(self.cache_dir)
+                sys.exit(1)
+
 
         os.makedirs(down_dir, exist_ok=True)
         new_fname = '{}/{}'.format(down_dir, tmp_fname.split('/')[-1])
