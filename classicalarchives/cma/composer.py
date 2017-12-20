@@ -314,7 +314,7 @@ class Page:
                     elif subelem.get_attribute('class') == 'tlLen':
                         length = subelem.text
                     elif subelem.get_attribute('class') == 'tlAdd':
-                        download_elem = subelem
+                        download_elem = subelem.find_element_by_xpath('./a')
                 if is_header:
                     continue
                 track = Track(self.driver, track_id, title, length, download_elem)
