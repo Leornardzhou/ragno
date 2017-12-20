@@ -15,7 +15,7 @@ def get_course(ncourse_max):
     session.login(driver, home_dir + '/plst.credential.json')
     utils.wait(3)
 
-    ncourse = 1
+    ncourse = 0
     for line in open('courses.list'):
         course_id = line.rstrip()
         out_dir = 'courses/' + course_id

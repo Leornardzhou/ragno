@@ -7,9 +7,27 @@ import time
 import random
 import requests
 import os
+import shutil
+
+
+def clean_dir(target_dir, verbose=True):
+    # keep the target_dir and clean everything inside
+
+    if verbose:
+        print_message('clean up "{}"'.format(target_dir))
+    for item in os.listdir(target_dir):
+        item = target_dir + '/' + item
+        if os.path.isdir(item):
+            shutil.rmtree(item)
+        else:
+            os.remove(item)
 
 
 def start_driver(driver_name, wait_time=5, verbose=False, download_dir=None):
+
+    # clean up download_dir
+    if download_dir:
+        clean_dir(download_dir, verbose=verbose)
 
     if verbose:
         print_message('open {} browser'.format(driver_name))
