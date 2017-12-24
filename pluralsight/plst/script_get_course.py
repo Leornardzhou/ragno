@@ -17,6 +17,8 @@ def get_course(ncourse_max):
 
     ncourse = 0
     for line in open('courses.list'):
+        if line.startswith('#'):
+            continue
         course_id = line.rstrip()
         out_dir = 'courses/' + course_id
         fname_json = '{}/{}.json'.format(out_dir, course_id)
@@ -30,7 +32,7 @@ def get_course(ncourse_max):
         c.get_transcript()
         c.format_json(fname_json)
         ncourse += 1
-        print()
+        utils.print_message('----------------------------------------------')
         utils.wait(3)
 
         if ncourse == ncourse_max:
