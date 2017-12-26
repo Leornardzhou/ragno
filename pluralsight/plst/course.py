@@ -7,10 +7,37 @@ host = 'https://app.pluralsight.com'
 
 def click_wootric_x(driver):
 
-    dismiss = driver.find_elements_by_xpath('wootric-x')
+    utils.wait(3)
+
+    # dismiss = driver.find_elements_by_xpath(
+    #     '//*[@class="wootric-x"]')
+    # if len(dismiss):
+    #     dismiss[0].click()
+    #     self.driver.execute_script("window.scrollTo(0, 0);")
+
+    # test if iframe is present
+    frame_list = driver.find_elements_by_id(
+        'webklipper-publisher-widget-container-notification-frame')
+    if len(frame_list) == 0:
+        return
+
+    driver.switch_to_frame(frame_list[0])
+
+    dismiss = driver.find_elements_by_xpath(
+        '//*[@id="webklipper-publisher-widget-container-notification-close-div"]')
     if len(dismiss):
         dismiss[0].click()
-        self.driver.execute_script("window.scrollTo(0, 0);")
+
+    driver.switch_to_default_content()
+
+    # dismiss = driver.find_elements_by_xpath(
+    #     '//*[@id="webklipper-publisher-widget-container-notification-close-div"]')
+    #     # '//*[@id="webklipper-publisher-widget-container-notification-container"]/div[2]/div/a')
+    #     # '//i[@class="wewidgeticon we_close icon-large"]')
+    # if len(dismiss):
+    #     dismiss[0].click()
+    #     self.driver.execute_script("window.scrollTo(0, 0);")
+
 
 
 class Course:
