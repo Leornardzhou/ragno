@@ -24,7 +24,7 @@ def get_course(ncourse_max):
         fname_json = '{}/{}.json'.format(out_dir, course_id)
         if os.path.isfile(fname_json):
             continue
-        utils.print_message('get course "{}"'.format(course_id))
+        utils.print_message('get course "{}" ({}/{})'.format(course_id, ncourse+1, ncourse_max))
         c = course.Course(driver, cache_dir=cache_dir, course_id=course_id)
         c.get_description()
         c.get_exercise_files(out_dir)
