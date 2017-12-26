@@ -57,6 +57,7 @@ def check_json(course_json):
 
 def check_course():
 
+    wrong_course_set = set()
     for course in sorted(os.listdir('courses')):
 
         course_dir = 'courses/{}'.format(course)
@@ -64,6 +65,7 @@ def check_course():
         course_json = '{}/{}.json'.format(course_dir, course)
         if not os.path.isfile(course_json):
             print('*ERROR*: missing json file: {}'.format(course_json))
+            wrong_course_set.add(course)
             continue
 
         has_description, has_download, has_toc, has_transcript, \
@@ -71,14 +73,17 @@ def check_course():
 
         if not has_description:
             print('*ERROR*: missing description: {}'.format(course_json))
+            wrong_course_set.add(course)
             continue
 
         if not has_toc:
             print('*ERROR*: missing table of contents: {}'.format(course_json))
+            wrong_course_set.add(course)
             continue
 
         if nmodule_nclip_mistmatch:
             print('*ERROR*: mismatch of #clips or #modules: {}'.format(course_json))
+            wrong_course_set.add(course)
             continue
 
         # if not has_transcript:
@@ -89,6 +94,7 @@ def check_course():
         for f in os.listdir(course_dir):
             f = join(course_dir, f)
             if f.endswith('.zip') and f != course_zip:
+                wrong_course_set.add(course)
                 print('*ERROR*: wrong name of course zip: {}'.format(f))
 
         zip_exists = False
@@ -98,17 +104,23 @@ def check_course():
             # zip_content(course, course_zip)
 
         if has_download and not zip_exists:
+            wrong_course_set.add(course)
             print('*ERROR*: missing exercise files: {}'.format(course_json))
             continue
 
         if has_download and len(os.listdir(course_dir)) != 2:
+            wrong_course_set.add(course)
             print('*ERROR*: missing/extra #output files {} (expect 2): {}'
                   .format(len(os.listdir(course_dir)), course_json))
             continue
 
         if not has_download and len(os.listdir(course_dir)) != 1:
+            wrong_course_set.add(course)
             print('*ERROR*: missing/extra #output files {} (expect 1): {}'
                   .format(len(os.listdir(course_dir)), course_json))
             continue
+
+    for course in sorted(wrong_course_set):
+        print(course)
 
 check_course()
