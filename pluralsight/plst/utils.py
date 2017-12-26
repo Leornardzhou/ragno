@@ -25,11 +25,17 @@ def clean_dir(target_dir, verbose=True):
 
 def start_driver(driver_name, wait_time=5, verbose=False, download_dir=None):
 
-    # clean up download_dir
-    clean_dir(download_dir, verbose=verbose)
 
     if verbose:
         print_message('open {} browser'.format(driver_name))
+
+    if driver_name not in ['chrome', 'phantomjs', 'firefox']:
+        print_message('*ERROR*: start_driver() driver_name must be chrome/phantomjs/firefox')
+        sys.exit(0)
+
+    # clean up download_dir
+    if download_dir:
+        clean_dir(download_dir, verbose=verbose)
 
     if driver_name == 'chrome':
         if download_dir:
