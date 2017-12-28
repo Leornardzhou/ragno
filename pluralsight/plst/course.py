@@ -5,7 +5,7 @@ import os
 
 host = 'https://app.pluralsight.com'
 
-def click_wootric_x(driver):
+def skip_ads(driver):
 
     utils.wait(3)
 
@@ -50,7 +50,7 @@ class Course:
 
         course_url = host + '/library/courses/' + course_id
         utils.open_url(driver, course_url)
-        click_wootric_x(driver)
+        skip_ads(driver)
 
         self.meta = CourseMeta(driver, course_url, course_id)
 
@@ -99,7 +99,7 @@ class Course:
         for tab in tab_list:
             if tab.text == tab_name:
                 tab.click()
-                click_wootric_x(self.driver)
+                skip_ads(self.driver)
                 return True
         return False  # no such tab found
 
@@ -133,6 +133,13 @@ class Course:
                 continue
             utils.print_message('downloading exercise files ...')
             button.click()
+            # in case it turns an XML with access denied error code
+            # e.g. https://app.pluralsight.com/library/courses/shattering-statue-bullet-physics-maya-2062/table-of-contents
+            if len(self.driver.find_elements_by_id('webkit-xml-viewer-source-xml')):
+                utils.print_message('The exercise files access is denied.')
+                self.driver.back()
+                skip_ads(self.driver)
+                return
             self.exercise_files = self.rename_exercise_files(down_dir)
 
 
