@@ -1,42 +1,11 @@
 import sys
 import utils
 import os
+from selenium.webdriver.common.action_chains import ActionChains  # to hover play-back bar
 
 
 host = 'https://app.pluralsight.com'
 
-def skip_ads(driver):
-
-    utils.wait(3)
-
-    # dismiss = driver.find_elements_by_xpath(
-    #     '//*[@class="wootric-x"]')
-    # if len(dismiss):
-    #     dismiss[0].click()
-    #     self.driver.execute_script("window.scrollTo(0, 0);")
-
-    # test if iframe is present
-    frame_list = driver.find_elements_by_id(
-        'webklipper-publisher-widget-container-notification-frame')
-    if len(frame_list) == 0:
-        return
-
-    driver.switch_to_frame(frame_list[0])
-
-    dismiss = driver.find_elements_by_xpath(
-        '//*[@id="webklipper-publisher-widget-container-notification-close-div"]')
-    if len(dismiss):
-        dismiss[0].click()
-
-    driver.switch_to_default_content()
-
-    # dismiss = driver.find_elements_by_xpath(
-    #     '//*[@id="webklipper-publisher-widget-container-notification-close-div"]')
-    #     # '//*[@id="webklipper-publisher-widget-container-notification-container"]/div[2]/div/a')
-    #     # '//i[@class="wewidgeticon we_close icon-large"]')
-    # if len(dismiss):
-    #     dismiss[0].click()
-    #     self.driver.execute_script("window.scrollTo(0, 0);")
 
 
 
@@ -579,3 +548,47 @@ class TableOfContentClip:
         out['length'] = self.length
         out['url'] = self.url
         return out
+
+
+def get_video_url(driver, clip_url):
+
+    # load the player
+    utils.open_url(driver, clip_url)
+    utils.wait(5)
+
+    # pause the video
+    control_bar = driver.find_element_by_class_name('hidden-bar')
+    play_button = driver.find_element_by_id('play-control')
+    ActionChains(driver).move_to_element(control_bar).click(play_button).perform()
+
+    # get video url
+    video_url = driver.find_element_by_tag_name('video').get_attribute('src')
+
+    return video_url
+
+
+
+def skip_ads(driver):
+
+    utils.wait(3)
+
+    # dismiss = driver.find_elements_by_xpath(
+    #     '//*[@class="wootric-x"]')
+    # if len(dismiss):
+    #     dismiss[0].click()
+    #     self.driver.execute_script("window.scrollTo(0, 0);")
+
+    # test if iframe is present
+    frame_list = driver.find_elements_by_id(
+        'webklipper-publisher-widget-container-notification-frame')
+    if len(frame_list) == 0:
+        return
+
+    driver.switch_to_frame(frame_list[0])
+
+    dismiss = driver.find_elements_by_xpath(
+        '//*[@id="webklipper-publisher-widget-container-notification-close-div"]')
+    if len(dismiss):
+        dismiss[0].click()
+
+    driver.switch_to_default_content()
