@@ -6,6 +6,9 @@ import re
 
 field = None
 json_name = sys.argv[1]
+if not json_name.endswith('.json'):
+    json_name = 'courses/{}/{}.json'.format(json_name, json_name)
+
 if len(sys.argv) == 3:
     field = sys.argv[2]
 
