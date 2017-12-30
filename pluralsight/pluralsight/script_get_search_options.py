@@ -26,7 +26,7 @@ def get_search_options():
 
         for filt, filt_name in sorted(filt_name_dict.items()):
             opt_url_dict = search.get_filter_options_url(driver, filt_name)
-            utils.save_json(opt_url_dict, 'search/filt_{}.json'.format(filt))
+            utils.save_json(opt_url_dict, 'search/filt_{}_urls.json'.format(filt))
             utils.wait(10)
 
     finally:
