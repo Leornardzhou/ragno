@@ -108,18 +108,6 @@ def check_course():
             print('*ERROR*: missing exercise files: {}'.format(course_json))
             continue
 
-        if has_download and len(os.listdir(course_dir)) != 2:
-            wrong_course_set.add(course)
-            print('*ERROR*: missing/extra #output files {} (expect 2): {}'
-                  .format(len(os.listdir(course_dir)), course_json))
-            continue
-
-        if not has_download and len(os.listdir(course_dir)) != 1:
-            wrong_course_set.add(course)
-            print('*ERROR*: missing/extra #output files {} (expect 1): {}'
-                  .format(len(os.listdir(course_dir)), course_json))
-            continue
-
     for course in sorted(wrong_course_set):
         print(course)
 
