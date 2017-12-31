@@ -1,4 +1,5 @@
 import utils
+import course
 
 
 search_url = 'https://app.pluralsight.com/library/search'
@@ -36,6 +37,7 @@ def get_filter_options_url(driver, filt_name):
 def get_all_courses_per_option(driver, opt_url, wait_time=5):
 
     utils.open_url(driver, opt_url, reopen=True, verbose=True)
+    course.skip_ads(driver)
     switch_to_courses(driver, 'Courses')
     ncourse = find_number_courses(driver)
     utils.print_message('loading {} courses'.format(ncourse))
