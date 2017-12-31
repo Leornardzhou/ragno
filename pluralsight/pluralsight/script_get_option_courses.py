@@ -19,8 +19,8 @@ def get_search_option_courses():
         'subject': 'SUBJECTS TO LEARN',
         'tool': 'TOOLS',
         'cert': 'CERTIFICATIONS',
-        'level': 'SKILL LEVELS',
-        'author': 'AUTHORS',
+        # 'level': 'SKILL LEVELS',
+        # 'author': 'AUTHORS',
     }
 
     try:
