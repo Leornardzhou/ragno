@@ -42,9 +42,9 @@ for line in open('midi.list'):
         success = job.cleanup()
     if success:
         utils.print_message(
-            'successfully downloaded {}'.format(job.track.title))
+            'successfully downloaded {} ({}/100)'.format(job.track.title, ntrack+1))
         utils.print_message('output file: {}'.format(fname))
-        print()
+        utils.print_message(' ')
         utils.wait(3)
     else:
         break
@@ -53,7 +53,7 @@ for line in open('midi.list'):
     if ntrack == ntrack_max:
         break
 
-print()
+utils.print_message(' ')
 session.logout(driver)
 utils.wait(3)
 utils.close_driver(driver)
