@@ -1,6 +1,0 @@
-need to have following GUI driver in PATH (e.g. /usr/local/bin)
-
-geckodriver (https://github.com/mozilla/geckodriver/releases)
-
-chromedriver (https://sites.google.com/a/chromium.org/chromedriver/downloads)
-
