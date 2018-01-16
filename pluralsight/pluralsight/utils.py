@@ -114,8 +114,9 @@ def print_message(msg):
 
 
 def save_json(data, fname, verbose=True):
-    dirname = fname.rsplit('/',1)[0]
-    os.makedirs(dirname, exist_ok=True)
+    if '/' in fname:
+        dirname = fname.rsplit('/',1)[0]
+        os.makedirs(dirname, exist_ok=True)
     if verbose:
         print_message('writing json {}'.format(fname))
     with open(fname, 'w') as f:
