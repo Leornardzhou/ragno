@@ -15,15 +15,15 @@ for linux, google-chrome-stable is used by webdriver (instead of chromedriver)
 
 Procedures:
 
-# get all composers, output = e.g. xxx.json, compare output with composers/all.json
+# get all composers, output = e.g. xxx.json, compare output with composers.json
 $ python3 script_get_all_composers.py all.json
-$ diff all.json composers/all.json
+$ diff all.json composers.json
 $ rm all.json
 
 
 
 # make composers.list (compare with composers.list)
-$ python3 script_print_json.py all.json | grep html | cut -d\" -f4 | awk -F\/ '{print $NF}' | sed 's/.html//g' | sort > a
+$ python3 script_print_json.py composers.json | grep html | cut -d\" -f4 | awk -F\/ '{print $NF}' | sed 's/.html//g' | sort > a
 $ sort composers.list | diff - a
 $ rm a
 
