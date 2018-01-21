@@ -1,7 +1,14 @@
 '''This module works with /midi/composers/x.html '''
 
-import utils
+import os
+import sys
 from string import ascii_lowercase
+import datetime
+
+script_dir = os.path.abspath(os.path.dirname(__file__))
+home_dir = os.path.dirname(script_dir)
+sys.path.append(home_dir)
+import utils
 
 
 host = 'https://www.classicalarchives.com'
@@ -56,12 +63,29 @@ def get_all_composers(driver, fname_out=None, verbose=True):
     return result
 
 
+def get_composer_ids(composer_json, fname_out):
+
+    composer_id_list = []
+    for composer in composer_json:
+        composer_id = composer['url'].split('/')[-1].replace('.html', '')
+        composer_id_list.append(int(composer_id))
+
+    fout = open(fname_out, 'w')
+    utils.print_message('wrinting composer ID list ' + fname_out)
+    for composer_id in sorted(composer_id_list):
+        print(composer_id, file=fout)
+    fout.close()
+
+
 if __name__ == '__main__':
 
-    import utils
-    import sys
-    out_name = sys.argv[1]
+    timestamp = datetime.datetime.today().strftime("%Y%m%d%H%M")
+    out_json_name = '{}/data/composers_{}.json'.format(home_dir, timestamp)
+    out_list_name = '{}/data/composers_{}.list'.format(home_dir, timestamp)
 
     driver = utils.start_driver('phantomjs')
-    get_all_composers(driver, out_name)
-    driver.close()
+    try:
+        composer_json = get_all_composers(driver, out_json_name)
+        get_composer_ids(composer_json, out_list_name)
+    finally:
+        driver.close()
