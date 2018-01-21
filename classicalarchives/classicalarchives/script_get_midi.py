@@ -7,8 +7,12 @@ import download
 import pathlib
 import time
 from pyvirtualdisplay import Display
+
+
 display = Display(visible=0, size=(1024,768))
 display.start()
+
+current_dir = os.path.abspath(os.path.dirname(__file__))
 
 utils.print_message('---------- Start Time: {} ----------'.format(time.ctime()))
 
@@ -21,12 +25,12 @@ utils.print_message(' ')
 
 ntrack = 0
 ntrack_max = 103
-for line in open('midi.list'):
+for line in open('{}/midi.list'.format(current_dir)):
 
     composer_id, work_id, page_id, track_id = map(
         int, line.rstrip().split(','))
 
-    out_dir = 'midi/{}'.format(composer_id)
+    out_dir = '{}/midi/{}'.format(current_dir, composer_id)
     os.makedirs(out_dir, exist_ok=True)
     fname_prefix = 'composer_{}.work_{}.page_{}.track_{}'.format(
         composer_id, work_id, page_id, track_id)
