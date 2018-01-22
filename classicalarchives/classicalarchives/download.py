@@ -1,7 +1,7 @@
-import utils
-import composer
 import os
 import pathlib
+from . import utils
+from . import composer
 
 
 host = 'https://www.classicalarchives.com'

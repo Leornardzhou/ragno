@@ -1,6 +1,6 @@
 '''This module works with /midi/composer/nnnn.html '''
 
-import utils
+from . import utils
 
 host = 'https://www.classicalarchives.com'
 
@@ -374,27 +374,3 @@ class Track:
         if fname_out:
             utils.save_json(data, fname_out)
         return data
-
-
-if __name__ == '__main__':
-
-    import sys
-
-    composer_id = sys.argv[1]
-    out_json = sys.argv[2]
-
-    driver = utils.start_driver('phantomjs', wait_time=10)
-    try:
-        c = Composer(driver, composer_id)
-        c.get_all_works()
-        c.format_json(fname_out=out_json)
-
-        # w = c.get_work_by_id(9458)
-        # w.get_all_pages()
-        # w.format_json(fname_out=out_json)
-
-    except:
-        utils.print_message('something is wrong.')
-        raise
-    finally:
-        driver.close()

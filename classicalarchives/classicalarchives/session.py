@@ -1,4 +1,4 @@
-import utils
+from . import utils
 
 host = 'https://www.classicalarchives.com'
 
