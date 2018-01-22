@@ -1,6 +1,8 @@
+from os.path import abspath, dirname
+package_path = dirname(dirname(dirname(abspath(__file__))))
+
 import sys
-root_path = '/home/zyhuang/git2/ragno/classicalarchives'
-sys.path.append(root_path)
+sys.path.append(package_path)
 
 
 from classicalarchives import utils
@@ -9,7 +11,7 @@ from classicalarchives import composer
 from classicalarchives import download
 
 
-credential = '/home/zyhuang/cma.credential.json'
+credential = '{}/data/cma.credential.json'.format(package_path)
 
 
 def test_login():
