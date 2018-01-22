@@ -3,8 +3,8 @@
 
 Following GUI drivers are required in system `PATH` (e.g. `/usr/local/bin`)
 
-* `geckodriver` [download page](https://github.com/mozilla/geckodriver/releases)
-* `chromedriver` [download page](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+* `geckodriver` [download](https://github.com/mozilla/geckodriver/releases)
+* `chromedriver` [download](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 * `google-chrome-stable` (for ubuntu, in lieu of `chromedriver`)
 
 
