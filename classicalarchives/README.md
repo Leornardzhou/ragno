@@ -1,71 +1,82 @@
+This package automates the MIDI download from [ClassicalArchives](https://www.classicalarchives.com/). You will need a valid premium account to download the data. The scripts provided below allow you to download maximum number of MIDIs (per day) set by the website.
 
-## Prerequisits
 
-Following GUI drivers are required in system `PATH` (e.g. `/usr/local/bin`)
+### Prerequisits
+
+The package requires Selenium (tested version 3.8.0) and Python Virtual Display (tested version 0.2.1) for remote cron jobs. These packages can be installed using 
+
+```bash
+pip3 install -U selenium PyVirtualDisplay
+```
+
+Following drivers are required in the system `PATH` (e.g. `/usr/local/bin`)
 
 * `geckodriver` [download](https://github.com/mozilla/geckodriver/releases)
 * `chromedriver` [download](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 * `google-chrome-stable` (for ubuntu, in lieu of `chromedriver`)
 
+A valid ClassicalArchives user account is required to automatically download the MIDIs (using `get_composer_midis.py`, see below). The account information should be provided in a json format (by default `data/cma.credential.json`)
+
+```javascript
+{
+    "username": "aaa",
+    "password": "bbb"   
+}
+```	
+	
 
 ## Procedures:
 
-Get all composers in json format, output will be in data directory (`data/composers_[timestamp].json` and `data/composers_[timestamp].list`)
+To get all composers in json format and a list of composer ids. Outputs are `data/composers_[timestamp].json` and `data/composers_[timestamp].list`.
 
 ```bash
-python3 script/get_all_composers.py 
-```
-
-Check if the number of MIDIs of each composer has changed (dependent on `data/composers_[timestamp].list`). *This may take a while.* If there are composers to be updated, the list (in csv format) will be show at the end.
-
-```bash
-python3 script_check_composer_online.py 
+python3  script/get_all_composers.py 
 ```
 
 
-check integrity of DOWNLOADED composer json file (depend on composers.list) Expect to see no output.
+To get all works of all composers in a given list (e.g. `data/composers_[timestamp].list`). Output json files are in the `data/composer` directory (e.g. `data/composer/2113.json`). It skips if outupt json file exists. *For composers with lots of works e.g. Bach (ID=2113), this step may take a couple of hours. However, the site only allows for a single login session.*
 
 ```bash
-python3 script_check_composer_local.py | awk '$2!=$3'
-```
-
-generate a list of all midis to download (depend on composers.list, compare with midi.list)
-
-```bash
-python3 script_generate_midi_list.py | sort > a
-sort midi.list | diff - a
-rm a
+python3  scripts/get_composer_works.py  [composers.list]
 ```
 
 
-print json with key.subkey.subsubkey ...
+To check if the number of MIDIs for each composer in an input list (e.g. `data/composers_[timestamp].list`) is consistent within the composer json file (`mode=local`), or is up-to-date with the number of MIDIs online (`mode=online`). *This may take a while with thousands of composers.* 
 
 ```bash
-python3 script_print_json.py xxx.json key.subkey.subsubkey[index]
+python3  script/check_composer_ntrack.py  [composers.list]  [local|online]
 ```
 
 
-get composer json, depend on composers.list (skip already existing), output = composer/xxx.json
+To generate a download list of all MIDIs (e.g. `data/midis_[timestamp].list`) for all composers in an input list (e.g. `data/composers_[timestamp].list`). The outupt MIDI list is of format `composer_id,work_id,page_id,track_id`. One work may consist of multiple movements (or `track`s) contributed by multiple users (each in one `page`).
+
+```bash
+python3  scripts/make_track_list.py  [composers.list]  [midis.list]
+```
+
+
+To view a json file, optionally with key.subkey.subsubkey... with possible list index if the (sub)value is a list.
+
+```bash
+python3  script/print_json.py  [input.json]  [key.subkey.subsubkey]
+python3  script/print_json.py  [input.json]  [key[index].subkey[index].subsubkey[index]]
+```
+
+
+To download MIDIs provided in an input list (e.g. `data/midis_[timestamp].list`) (existing outputs will be skipped). The output will be saved as `data/midi/[composer_id]/*.mid`. Due to daily download limit (100) set by the website, this script should be used in the cron job.
 
 ``` bash
-python3 script_get_composer.py
+python3  script/get_composer_midis.py  [midis.list]
 ```
 
 
-download midi given in midi.list (skip already existing) output = midi/xxx/xxx.mid, This command is part of crontab
-```bash
-python3 script_get_midi.py
-```
+### About remote GUI webdriver display
 
-## Other Tips:
-
-To open GUI remotely, `DISPLAY=:0 (nohup) python3 xxx.py` or `export DISPLAY=:0`.
-[reference](https://askubuntu.com/questions/47642/how-to-start-a-gui-software-on-a-remote-linux-pc-via-ssh)
+The scripts uses Selenium `phantomjs` driver mostly (except for `get_composer_midis.py` which uses `chromedriver` for stability concerns). Originally the GUI webdriver would require setting of environment variable `$DISPLAY`, e.g. `export DISPLAY=:0 python3 script.py`. Since `PyVirtualDisplay` is used, no GUI webdriver will pop up and the script can be safely used remotely under ssh. 
 
 
 ## TODO:
 
-* separate modules, scripts and data into different directories
 * pylint check
 * argparse
 
