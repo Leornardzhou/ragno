@@ -1,7 +1,7 @@
 This package automates the MIDI download from [ClassicalArchives](https://www.classicalarchives.com/). You will need a valid premium account to download the data. The scripts provided below allow you to download maximum number of MIDIs (per day) set by the website.
 
 
-### Prerequisits
+### Prerequisites
 
 The package requires Selenium (tested version 3.8.0) and Python Virtual Display (tested version 0.2.1) for remote cron jobs. These packages can be installed using 
 
@@ -25,7 +25,7 @@ A valid ClassicalArchives user account is required to automatically download the
 ```	
 	
 
-## Procedures:
+### Procedures
 
 To get all composers in json format and a list of composer ids. Outputs are `data/composers_[timestamp].json` and `data/composers_[timestamp].list`.
 
@@ -77,6 +77,6 @@ The scripts uses Selenium `phantomjs` driver mostly (except for `get_composer_mi
 
 ## TODO:
 
-* pylint check
+* pylint
 * argparse
 
