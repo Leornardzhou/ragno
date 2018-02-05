@@ -1,34 +1,40 @@
 from . import utils
 
 
-def query(receipt_number):
+def query(receipt_number_list):
     '''Query USCIS with a receipt number and fetch the message.
 
     Args:
-        receipt_number (str):   SRC1890055883
+        receipt_number_list (list):  a list of receipt numbers (str)
 
     Returns:
-        status (dict):  {title: title, message: message}
+        status (dict):
+            {rc_number: {title: title (str), message: message (str)}}
     '''
 
     url = 'https://egov.uscis.gov/casestatus/landing.do'
 
-    driver = utils.start_driver('chrome', verbose=True)
-    status = {'receipt': receipt_number, 'title': None, 'message': None}
+    driver = utils.start_driver('phantomjs', verbose=True)
+    status = {}
 
     try:
-        utils.open_url(driver, url)
-        driver.find_element_by_id('receipt_number').send_keys(receipt_number)
-        driver.find_element_by_xpath('//*[@type="submit"]').click()
-        utils.wait(3)
+        for receipt_number in receipt_number_list:
+            utils.print_message('querying receipt number: {}'
+                                .format(receipt_number))
+            status[receipt_number] = {'title': None, 'message': None}
 
-        title = driver.find_element_by_xpath('//h1')
-        message = title.find_element_by_xpath('../p').text
-        title = title.text
-        status = {'receipt': receipt_number, 'title': title, 'message': message}
+            utils.open_url(driver, url, reopen=True)
+            driver.find_element_by_id('receipt_number')\
+                  .send_keys(receipt_number)
+            driver.find_element_by_xpath('//*[@type="submit"]').click()
+            utils.wait(3)
+
+            title = driver.find_element_by_xpath('//h1')
+            status[receipt_number]['message'] \
+                = title.find_element_by_xpath('../p').text
+            status[receipt_number]['title'] = title.text
 
     finally:
-        utils.wait(3)
         utils.close_driver(driver, verbose=True)
 
     return status
