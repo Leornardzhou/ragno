@@ -1,4 +1,5 @@
 from . import utils
+from pyvirtualdisplay import Display
 
 
 def query(receipt_number_list):
@@ -14,7 +15,11 @@ def query(receipt_number_list):
 
     url = 'https://egov.uscis.gov/casestatus/landing.do'
 
-    driver = utils.start_driver('phantomjs', verbose=True)
+    # start virtual display
+    display = Display(visible=0, size=(1024,768))
+    display.start()
+
+    driver = utils.start_driver('chrome', verbose=True)
     status = {}
 
     try:
@@ -36,5 +41,6 @@ def query(receipt_number_list):
 
     finally:
         utils.close_driver(driver, verbose=True)
+        display.stop()
 
     return status
