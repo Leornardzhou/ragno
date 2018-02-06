@@ -32,7 +32,7 @@ def save_html(html, fname):
 
 
 def get_all_htmls(lang):
-    '''Download all htmls of bible in a given language.
+    '''Download all htmls of Bible in a given language.
 
     Output data will be saved in ../data/[lang]/*.HTM
 
