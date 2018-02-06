@@ -1,3 +1,7 @@
+'''This script downloads all htmls of Italian/English/Spanish Versions of Bible
+from vatican.va/archive/bible/index_it.htm
+'''
+
 from os.path import abspath, dirname
 import os
 import sys
@@ -6,16 +10,20 @@ import re
 
 
 def get_html(url):
+    '''Get the HTML of a URL and return the text string.'''
 
     r = requests.get(url)
     if not r.ok:
         print('*ERROR*: failed to retrieve html from ' +url[lang])
         sys.exit(0)
+    html = r.text
+    r.close()
 
-    return r.text
+    return html
 
 
 def save_html(html, fname):
+    '''Save the HTML text in an output file.'''
 
     print('writing '+ fname, file=sys.stderr)
     f = open(fname, 'w')
@@ -24,12 +32,20 @@ def save_html(html, fname):
 
 
 def get_all_htmls(lang):
+    '''Download all htmls of bible in a given language.
+
+    Output data will be saved in ../data/[lang]/*.HTM
+
+    Args:
+        lang (str):  italian, english, spanish
+    '''
 
     work_dir = dirname(dirname(abspath(__file__)))
 
     url = {
         'italian': 'http://www.vatican.va/archive/ITA0001/_INDEX.HTM',
         'english': 'http://www.vatican.va/archive/ENG0839/_INDEX.HTM',
+        'spanish': 'http://www.vatican.va/archive/ESL0506/_INDEX.HTM',
     }
 
     out_dir = '{}/data/{}'.format(work_dir, lang)
@@ -47,5 +63,5 @@ def get_all_htmls(lang):
 
 if __name__ == '__main__':
 
-    for lang in ['italian', 'english']:
+    for lang in ['italian', 'english', 'spanish']:
         get_all_htmls(lang)
