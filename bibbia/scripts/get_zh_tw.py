@@ -1,4 +1,4 @@
-'''This script downloads all pdfs of Chinese Version of Bible from
+'''This script downloads all pdfs of Traditional Chinese Version of Bible from
 http://www.vatican.va/chinese/bibbia.htm '''
 
 import os
@@ -21,12 +21,12 @@ def save_pdf(url, fname, chunk_size=1024):
 
 
 def get_all_pdfs():
-    '''Download all PDFs of Bible in Chinese.
+    '''Download all PDFs of Bible in Traiditional Chinese.
 
     '''
 
     work_dir = dirname(dirname(abspath(__file__)))
-    out_dir = '{}/data/chinese'.format(work_dir)
+    out_dir = '{}/data/chinese_tw'.format(work_dir)
     os.makedirs(out_dir, exist_ok=True)
 
     url = 'http://www.vatican.va/chinese/bibbia.htm'
@@ -34,12 +34,20 @@ def get_all_pdfs():
     pdf_list = re.findall(r'href="(.*?)">', r.text)
     r.close()
 
-    for i, pdf in enumerate(pdf_list):
+    uniq_pdf_list = []
+    for pdf in pdf_list:
+        if pdf not in uniq_pdf_list:
+            uniq_pdf_list.append(pdf)
+
+    for i, pdf in enumerate(uniq_pdf_list):
         pdf_url = 'http://www.vatican.va/chinese/' + pdf
         foo, part, title = pdf.split('/')[:3]
-        fname = '{}/{}_{}'.format(out_dir, part, title)
+        fname = '{}/{}_{}_{}'.format(out_dir, str(i).zfill(3), part, title)
         save_pdf(pdf_url, fname)
+        print('converting pdf {} to text ...'.format(fname))
+        os.system('pdftotext '+fname)
 
 
 if __name__ == '__main__':
+
     get_all_pdfs()
