@@ -7,14 +7,16 @@ import os
 import sys
 import requests
 import re
+import time
 
 
 def get_html(url):
     '''Get the HTML of a URL and return the text string.'''
 
     r = requests.get(url)
+    time.sleep(1)
     if not r.ok:
-        print('*ERROR*: failed to retrieve html from ' +url[lang])
+        print('*ERROR*: failed to retrieve html from ' + url)
         sys.exit(0)
     html = r.text
     r.close()
@@ -53,12 +55,14 @@ def get_all_htmls(lang):
 
     index_html = get_html(url[lang])
 
+    index = 0
     chpt_url_list = re.findall(r'<a href=(__P.*?)>', index_html)
     for chpt_url in chpt_url_list:
-        fname = '{}/{}'.format(out_dir, chpt_url)
+        fname = '{}/{}_{}'.format(out_dir, str(index).zfill(3), chpt_url)
         chpt_url = '{}/{}'.format(dirname(url[lang]), chpt_url)
         html = get_html(chpt_url)
         save_html(html, fname)
+        index += 1
 
 
 if __name__ == '__main__':
