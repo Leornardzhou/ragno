@@ -18,7 +18,7 @@ from datetime import date, timedelta
 def check_progress(log_today, log_yesterday):
 
     status_today = open(log_today).read()
-    status_yesterday = open(log_today).read()
+    status_yesterday = open(log_yesterday).read()
 
     if not os.path.isfile(log_yesterday):
         # today is the first day you run this.
