@@ -60,8 +60,9 @@ def get_all_htmls(lang):
     for chpt_url in chpt_url_list:
         fname = '{}/{}_{}'.format(out_dir, str(index).zfill(4), chpt_url)
         chpt_url = '{}/{}'.format(dirname(url[lang]), chpt_url)
-        html = get_html(chpt_url)
-        save_html(html, fname)
+        if not os.path.isfile(fname):
+            html = get_html(chpt_url)
+            save_html(html, fname)
         index += 1
 
 
