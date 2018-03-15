@@ -2,6 +2,7 @@
 '''
 
 import os
+from os.path import dirname, abspath
 import sys
 from selenium import webdriver
 from datetime import date
@@ -12,7 +13,8 @@ import requests
 import datetime
 
 main_url = 'https://www.proxydocker.com/en/proxylist/type/HTTP'
-data_dir = '../data'
+root_dir = dirname(dirname(abspath(__file__)))
+data_dir = '{}/data'.format(root_dir)
 
 
 def save_json(proxy_dict, fname):
@@ -76,7 +78,7 @@ def test_proxy(proxy_url, test_url='http://icanhazip.com', timeout=15):
 def get_proxy_list(driver, html_in, with_test=True):
 
     # use local file to avoid staled element in cache
-    driver.get(html_in)
+    driver.get('file://' + html_in)
 
     print('processing ' + html_in)
 
@@ -139,11 +141,11 @@ def merge_json(timestamp, with_test=True):
 
 def proxydocker(npage):
 
-    # display = Display(visible=0, size=(1024,768))
-    # display.start()
+    display = Display(visible=0, size=(1024,768))
+    display.start()
 
-    driver = webdriver.PhantomJS()
-    # driver = webdriver.Chrome()
+    # driver = webdriver.PhantomJS()
+    driver = webdriver.Chrome()
     proxy_dict = {}
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
     os.makedirs(data_dir, exist_ok=True)
@@ -169,7 +171,7 @@ def proxydocker(npage):
         driver.close()
         if os.path.isfile(html_tmp):
             os.remove(html_tmp)
-        # display.stop()
+        display.stop()
 
     # merge jsons (better with multiprocessing)
     # merge_json(timestamp)
