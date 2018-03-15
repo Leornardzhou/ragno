@@ -46,7 +46,8 @@ def goto_page(driver, page_id, html_out, nretry_max=10, sleep_time=3):
             nproxy = len(driver.find_elements_by_xpath(
                 '//tbody/tr/td/a[starts-with(@href, "/en/proxy/")]'))
         except:
-            nretry += 1
+            pass
+        nretry += 1
 
     if nproxy:
         data = driver.find_element_by_xpath('/*').get_attribute('outerHTML')
@@ -73,7 +74,8 @@ def test_proxy(proxy_url, test_url='http://icanhazip.com',
                 elapsed = r.elapsed.total_seconds()
         except:
             # no subdivision of error here
-            nretry += 1
+            pass
+        nretry += 1
 
     if elapsed > 0:
         print('success in {} seconds'.format(elapsed), file=sys.stderr)
@@ -128,10 +130,10 @@ def merge_json(timestamp, with_test=False):
                                 .format(timestamp)):
             continue
         fname = '{}/{}'.format(data_dir, fname)
-        print('merging ' + fname, file=sys.stderr)
+        # print('merging ' + fname, file=sys.stderr)
         tmp_dict = json.loads(open(fname).read())
         proxy_dict.update(tmp_dict)
-        os.remove(fname)
+        # os.remove(fname)
 
     print('collected {} proxies'.format(len(proxy_dict)), file=sys.stderr)
 
