@@ -1,4 +1,6 @@
-'''Crawl list of proxies from https://www.proxydocker.com/en/
+'''Crawl a number of pages of proxies from https://www.proxydocker.com/en/
+
+The output is saved to ../data directory (proxydocker.yyyymmddHHMM.proxies.json)
 '''
 
 import os
@@ -27,7 +29,7 @@ def save_json(proxy_dict, fname):
 
 
 def goto_page(driver, page_id, html_out, nretry_max=10):
-    '''Try save a page with page ID (retry at maximum nretry_max times).'''
+    '''Download a page with given page ID (retry at maximum nretry_max times).'''
 
     nretry = 0
     nproxy = 0
@@ -54,18 +56,23 @@ def goto_page(driver, page_id, html_out, nretry_max=10):
     return nproxy
 
 
-def test_proxy(proxy_url, test_url='http://icanhazip.com', timeout=15):
+def test_proxy(proxy_url, test_url='http://icanhazip.com',
+               timeout=15, nretry_max=3):
     '''Test if proxy is effective and return elapse of test time.'''
 
     print(':: testing {} ... '.format(proxy_url), end='', file=sys.stderr)
     elapsed = -1
-    try:
-        r = requests.get(test_url, proxies={'http': proxy_url}, timeout=timeout)
-        if r.ok and r.text.rstrip() == proxy_url.split(':')[0]:
-            elapsed = r.elapsed.total_seconds()
-    except:
-        # no subdivision of error here
-        pass
+
+    nretry = 0
+    while nretry < nretry_max:
+        try:
+            r = requests.get(test_url, proxies={'http': proxy_url},
+                             timeout=timeout)
+            if r.ok and r.text.rstrip() == proxy_url.split(':')[0]:
+                elapsed = r.elapsed.total_seconds()
+        except:
+            # no subdivision of error here
+            nretry += 1
 
     if elapsed > 0:
         print('success in {} seconds'.format(elapsed), file=sys.stderr)
@@ -76,6 +83,7 @@ def test_proxy(proxy_url, test_url='http://icanhazip.com', timeout=15):
 
 
 def get_proxy_list(driver, html_in, with_test=True):
+    '''Extract proxies and attributes from a local html file.'''
 
     # use local file to avoid staled element in cache
     driver.get('file://' + html_in)
@@ -108,6 +116,9 @@ def get_proxy_list(driver, html_in, with_test=True):
 
 
 def merge_json(timestamp, with_test=False):
+    '''Merge all jsons with the same timestamp (optionally vaildate and filter
+    proxies).
+    '''
 
     json_out = '{}/proxydocker.{}.proxies.json'.format(data_dir, timestamp)
     proxy_dict = {}
@@ -133,13 +144,14 @@ def merge_json(timestamp, with_test=False):
                 proxy_dict[proxy]['elapse'] = elapse
         for proxy in exclude_proxies:
             proxy_dict.pop(proxy)
-        print('tested {} proxies successful'
+        print('validated {} proxies successful'
               .format(len(proxy_dict)), file=sys.stderr)
 
     save_json(proxy_dict, json_out)
 
 
 def proxydocker(npage):
+    '''Extract proxies in a number of pages from proxydocker.com'''
 
     display = Display(visible=0, size=(1024,768))
     display.start()
@@ -173,8 +185,9 @@ def proxydocker(npage):
             os.remove(html_tmp)
         display.stop()
 
-    # merge jsons (better with multiprocessing)
-    # merge_json(timestamp)
+    # merge jsons (better validation with multiprocessing)
+    merge_json(timestamp)
+
 
 if __name__ == '__main__':
 
