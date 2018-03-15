@@ -28,7 +28,7 @@ def save_json(proxy_dict, fname):
     fout.close()
 
 
-def goto_page(driver, page_id, html_out, nretry_max=10):
+def goto_page(driver, page_id, html_out, nretry_max=10, sleep_time=3):
     '''Download a page with given page ID (retry at maximum nretry_max times).'''
 
     nretry = 0
@@ -42,6 +42,7 @@ def goto_page(driver, page_id, html_out, nretry_max=10):
                 .format(page_id))
             driver.execute_script(
                 'document.getElementById(\'pagination\').submit()')
+            time.sleep(sleep_time)
             nproxy = len(driver.find_elements_by_xpath(
                 '//tbody/tr/td/a[starts-with(@href, "/en/proxy/")]'))
         except:
@@ -156,8 +157,8 @@ def proxydocker(npage):
     display = Display(visible=0, size=(1024,768))
     display.start()
 
-    # driver = webdriver.PhantomJS()
-    driver = webdriver.Chrome()
+    driver = webdriver.PhantomJS()
+    # driver = webdriver.Chrome()
     proxy_dict = {}
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
     os.makedirs(data_dir, exist_ok=True)
