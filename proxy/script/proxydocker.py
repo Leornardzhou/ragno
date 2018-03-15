@@ -107,7 +107,7 @@ def get_proxy_list(driver, html_in, with_test=True):
     return proxy_dict
 
 
-def merge_json(timestamp, with_test=True):
+def merge_json(timestamp, with_test=False):
 
     json_out = '{}/proxydocker.{}.proxies.json'.format(data_dir, timestamp)
     proxy_dict = {}
@@ -119,7 +119,7 @@ def merge_json(timestamp, with_test=True):
         print('merging ' + fname, file=sys.stderr)
         tmp_dict = json.loads(open(fname).read())
         proxy_dict.update(tmp_dict)
-        # os.remove(fname)
+        os.remove(fname)
 
     print('collected {} proxies'.format(len(proxy_dict)), file=sys.stderr)
 
