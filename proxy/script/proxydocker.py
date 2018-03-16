@@ -15,8 +15,8 @@ import requests
 import datetime
 import test_proxy
 
-
-main_url = 'https://www.proxydocker.com/en/proxylist/type/HTTP'
+lang = 'en'
+main_url = 'https://www.proxydocker.com/'lang'/proxylist/type/HTTP'
 root_dir = dirname(dirname(abspath(__file__)))
 data_dir = '{}/data'.format(root_dir)
 
@@ -46,7 +46,7 @@ def goto_page(driver, page_id, html_out, nretry_max=10, sleep_time=3):
                 'document.getElementById(\'pagination\').submit()')
             time.sleep(sleep_time)
             nproxy = len(driver.find_elements_by_xpath(
-                '//tbody/tr/td/a[starts-with(@href, "/en/proxy/")]'))
+                '//tbody/tr/td/a[starts-with(@href, "/{}/proxy/")]'.format(lang)))
         except:
             pass
         nretry += 1
@@ -97,7 +97,7 @@ def get_proxy_list(driver, html_in, with_test=True):
 
     proxy_dict = dict()
     elem_list = driver.find_elements_by_xpath(
-        '//tbody/tr/td/a[starts-with(@href, "/en/proxy/")]')
+        '//tbody/tr/td/a[starts-with(@href, "/{}/proxy/")]'.format(lang))
     for elem in elem_list:
         proxy_url = elem.get_attribute("href").split('/')[-1]
         ptype = (elem.find_element_by_xpath('../../td[2]').
@@ -135,9 +135,15 @@ def merge_json(timestamp, with_test=False):
         # print('merging ' + fname, file=sys.stderr)
         tmp_dict = json.loads(open(fname).read())
         proxy_dict.update(tmp_dict)
-        # os.remove(fname)
 
     print('collected {} proxies'.format(len(proxy_dict)), file=sys.stderr)
+
+    # for fname in os.listdir(data_dir):
+    for fname in os.listdir(data_dir):
+        if not fname.startswith('proxydocker.{}.proxies.page'
+                                .format(timestamp)):
+            continue
+        os.remove('{}/{}'.format(data_dir,fname))
 
     if with_test:
         exclude_proxies = set()
@@ -158,8 +164,8 @@ def merge_json(timestamp, with_test=False):
 def proxydocker(npage):
     '''Extract proxies in a number of pages from proxydocker.com'''
 
-    display = Display(visible=0, size=(1024,768))
-    display.start()
+    # display = Display(visible=0, size=(1024,768))
+    # display.start()
 
     driver = webdriver.PhantomJS()
     # driver = webdriver.Chrome()
@@ -188,7 +194,7 @@ def proxydocker(npage):
         driver.close()
         if os.path.isfile(html_tmp):
             os.remove(html_tmp)
-        display.stop()
+        # display.stop()
 
     # merge jsons (better validation with multiprocessing)
     merge_json(timestamp)
@@ -197,7 +203,6 @@ def proxydocker(npage):
 
 if __name__ == '__main__':
 
-    # npage = int(sys.argv[1])
-    # timestamp = proxydocker(npage)
-    timestamp = '201803151640'
+    npage = int(sys.argv[1])
+    timestamp = proxydocker(npage)
     test_proxy.test_all_proxy(timestamp)
