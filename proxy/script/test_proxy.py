@@ -18,7 +18,8 @@ def test_all_proxy(timestamp, domain='proxydocker'):
     # proxy_list = [x for x in range(100)]
     p = Pool(processes=8)
     r = [p.apply_async(test_proxy, args=(x,)) for x in proxy_list]
-    output = [x.get() for x in r if x != 'Null']
+    output = [x.get() for x in r]
+    output = [x for x in output if x != 'Null']
 
     print('writing ' + list_out, file=sys.stderr)
     fout = open(list_out, 'w')
