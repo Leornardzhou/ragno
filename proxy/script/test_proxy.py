@@ -1,4 +1,5 @@
 import os
+from os.path import dirname, abspath
 import requests
 import sys
 import multiprocessing
@@ -7,16 +8,19 @@ import json
 import time
 import random
 
-def test_all_proxy(timestamp, domain='proxydocker'):
+root_dir = dirname(dirname(abspath(__file__)))
+data_dir = '{}/data'.format(root_dir)
 
-    json_in = '../data/{}.{}.proxies.json'.format(domain, timestamp)
-    list_out = '../data/{}.{}.proxies.valid.list'.format(domain, timestamp)
+def test_all_proxy(timestamp, domain='proxydocker', nproc=8):
+
+    json_in = '{}/{}.{}.proxies.json'.format(data_dir, domain, timestamp)
+    list_out = '{}/{}.{}.proxies.valid.list'.format(data_dir, domain, timestamp)
     data = json.loads(open(json_in).read())
 
     proxy_list = sorted(list(data.keys()))
-    print(len(proxy_list))
+    print('validating {} proxies ...'.format(len(proxy_list)))
     # proxy_list = [x for x in range(100)]
-    p = Pool(processes=8)
+    p = Pool(processes=nproc)
     r = [p.apply_async(test_proxy, args=(x,)) for x in proxy_list]
     output = [x.get() for x in r]
     output = [x for x in output if x != 'Null']
