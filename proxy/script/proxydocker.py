@@ -13,6 +13,8 @@ import json
 import time
 import requests
 import datetime
+import test_proxy
+
 
 main_url = 'https://www.proxydocker.com/en/proxylist/type/HTTP'
 root_dir = dirname(dirname(abspath(__file__)))
@@ -58,7 +60,7 @@ def goto_page(driver, page_id, html_out, nretry_max=10, sleep_time=3):
     return nproxy
 
 
-def test_proxy(proxy_url, test_url='http://icanhazip.com',
+def serial_test_proxy(proxy_url, test_url='http://icanhazip.com',
                timeout=15, nretry_max=3):
     '''Test if proxy is effective and return elapse of test time.'''
 
@@ -140,7 +142,7 @@ def merge_json(timestamp, with_test=False):
     if with_test:
         exclude_proxies = set()
         for proxy in proxy_dict:
-            elapse = test_proxy(proxy)
+            elapse = serial_test_proxy(proxy)
             if elapse < 0:
                 exclude_proxies.add(proxy)
             else:
@@ -190,9 +192,12 @@ def proxydocker(npage):
 
     # merge jsons (better validation with multiprocessing)
     merge_json(timestamp)
+    return timestamp
 
 
 if __name__ == '__main__':
 
-    npage = int(sys.argv[1])
-    proxydocker(npage)
+    # npage = int(sys.argv[1])
+    # timestamp = proxydocker(npage)
+    timestamp = '201803151640'
+    test_proxy.test_all_proxy(timestamp)
