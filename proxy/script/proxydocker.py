@@ -7,6 +7,7 @@ import os
 from os.path import dirname, abspath
 import sys
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from datetime import date
 from pyvirtualdisplay import Display   # linux only
 import json
@@ -14,9 +15,11 @@ import time
 import requests
 import datetime
 import test_proxy
+import gzip
+
 
 lang = 'en'
-main_url = 'https://www.proxydocker.com/'lang'/proxylist/type/HTTP'
+main_url = 'https://www.proxydocker.com/{}/proxylist/type/HTTP'.format(lang)
 root_dir = dirname(dirname(abspath(__file__)))
 data_dir = '{}/data'.format(root_dir)
 
@@ -25,8 +28,12 @@ def save_json(proxy_dict, fname):
     '''Save a proxy dictionary as JSON file.'''
 
     print('writing output json ' + fname)
-    fout = open(fname, 'w')
-    print(json.dumps(proxy_dict, sort_keys=True), file=fout)
+    if fname.endswith('.gz'):
+        fout = gzip.open(fname, 'wb')
+        fout.write(json.dumps(proxy_dict, sort_keys=True).encode('utf-8'))
+    else:
+        fout = open(fname, 'w')
+        print(json.dumps(proxy_dict, sort_keys=True), file=fout)
     fout.close()
 
 
@@ -125,7 +132,7 @@ def merge_json(timestamp, with_test=False):
     proxies).
     '''
 
-    json_out = '{}/proxydocker.{}.proxies.json'.format(data_dir, timestamp)
+    json_out = '{}/proxydocker.{}.proxies.json.gz'.format(data_dir, timestamp)
     proxy_dict = {}
     for fname in os.listdir(data_dir):
         if not fname.startswith('proxydocker.{}.proxies.page'
@@ -136,14 +143,13 @@ def merge_json(timestamp, with_test=False):
         tmp_dict = json.loads(open(fname).read())
         proxy_dict.update(tmp_dict)
 
-    print('collected {} proxies'.format(len(proxy_dict)), file=sys.stderr)
-
-    # for fname in os.listdir(data_dir):
     for fname in os.listdir(data_dir):
         if not fname.startswith('proxydocker.{}.proxies.page'
                                 .format(timestamp)):
             continue
         os.remove('{}/{}'.format(data_dir,fname))
+
+    print('collected {} proxies'.format(len(proxy_dict)), file=sys.stderr)
 
     if with_test:
         exclude_proxies = set()
