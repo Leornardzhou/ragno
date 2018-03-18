@@ -1,3 +1,6 @@
+'''Validate all proxies in a json with gievn timestamp.
+'''
+
 import os
 from os.path import dirname, abspath
 import requests
@@ -7,15 +10,17 @@ from multiprocessing import Pool
 import json
 import time
 import random
+import gzip
+
 
 root_dir = dirname(dirname(abspath(__file__)))
 data_dir = '{}/data'.format(root_dir)
 
 def test_all_proxy(timestamp, domain='proxydocker', nproc=8):
 
-    json_in = '{}/{}.{}.proxies.json'.format(data_dir, domain, timestamp)
+    json_in = '{}/{}.{}.proxies.json.gz'.format(data_dir, domain, timestamp)
     list_out = '{}/{}.{}.proxies.valid.list'.format(data_dir, domain, timestamp)
-    data = json.loads(open(json_in).read())
+    data = json.loads(gzip.open(json_in).read().decode('utf-8'))
 
     proxy_list = sorted(list(data.keys()))
     print('validating {} proxies ...'.format(len(proxy_list)))
@@ -28,7 +33,7 @@ def test_all_proxy(timestamp, domain='proxydocker', nproc=8):
     print('writing ' + list_out, file=sys.stderr)
     fout = open(list_out, 'w')
     for proxy in output:
-        print(proxy, file=fout)
+        print(proxy[0], proxy[1], sep='\t', file=fout)
     fout.close()
 
 
@@ -51,14 +56,14 @@ def test_proxy(proxy_url, test_url='http://icanhazip.com',
             r = requests.get(test_url, proxies={'http': proxy_url},
                              timeout=timeout)
             if r.ok and r.text.rstrip() == proxy_url.split(':')[0]:
-                return proxy_url
+                return proxy_url, 'PASS'
         except:
             pass
 
         nretry += 1
         time.sleep(1)
 
-    return 'Null'
+    return proxy_url, 'FAIL'
 
 
 if __name__ == '__main__':
