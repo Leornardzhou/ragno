@@ -6,7 +6,10 @@ import json
 import gzip
 import sys
 import requests
+from os.path import dirname, abspath
 
+root_dir = dirname(dirname(abspath(__file__)))
+data_dir = '{}/data'.format(root_dir)
 
 def black_list(json_name, out_bl_name):
 
@@ -41,12 +44,12 @@ def black_list(json_name, out_bl_name):
 
 if __name__ == '__main__':
 
-    for fin in sorted(os.listdir('../data')):
+    for fin in sorted(os.listdir(data_dir)):
         if fin.endswith('.proxies.json.gz') and fin.startswith('proxydocker'):
             timestamp = fin.split('.')[1]
-            out_bl_name = ('../data/proxydocker.{}.proxies.blacklist'
-                           .format(timestamp))
-            fin = '../data/' + fin
+            out_bl_name = ('{}/proxydocker.{}.proxies.blacklist'
+                           .format(data_dir, timestamp))
+            fin = data_dir + '/' + fin
             if os.path.isfile(out_bl_name):
                 continue
             black_list(fin, out_bl_name)
