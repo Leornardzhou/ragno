@@ -211,4 +211,4 @@ if __name__ == '__main__':
 
     npage = int(sys.argv[1])
     timestamp = proxydocker(npage)
-    test_proxy.test_all_proxy(timestamp)
+    # test_proxy.test_all_proxy(timestamp)
