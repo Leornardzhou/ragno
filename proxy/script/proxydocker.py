@@ -14,7 +14,6 @@ import json
 import time
 import requests
 import datetime
-import test_proxy
 import gzip
 
 
