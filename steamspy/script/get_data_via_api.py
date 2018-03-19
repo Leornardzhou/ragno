@@ -43,6 +43,7 @@ def write_json(data, fname):
 def load_json(fname):
     '''Read compressed/uncompressed JSON file.'''
 
+    print(': reading ' + fname, file=sys.stderr, flush=True)
     if fname.endswith('.gz'):
         return json.loads(gzip.open(fname).read().decode('utf-8'))
     else:
@@ -57,7 +58,7 @@ def load_proxy_list(proxy_dir):
         if not fname.endswith('.validated.list.gz'):
             continue
         fname = proxy_dir + '/' + fname
-        print('readng ' + fname)
+        print(': readng ' + fname)
         if fname.endswith('.gz'):
             for line in gzip.open(fname):
                 proxy, npass, nfail, etime = line.decode('utf-8').rstrip().split('\t')
@@ -137,7 +138,7 @@ def get_all_urls(proxy_list, url_dict, out_dir,
 
     os.makedirs(out_dir, exist_ok=True)
 
-    url_dict = {k:url_dict[k] for k in list(url_dict)[:10]}
+    url_dict = {k:url_dict[k] for k in list(url_dict)}
 
     data = dict()
     nretry = 100
@@ -204,6 +205,8 @@ if __name__ == '__main__':
     # proxy_dir = '../../proxy/data_valid/'
     # out_dir = 'test20180319'
 
+    tstart = time.time()
+
     proxy_dir, out_dir = sys.argv[1:3]
     proxy_list = load_proxy_list(proxy_dir)
 
@@ -222,3 +225,8 @@ if __name__ == '__main__':
     print('----- retieve game tags -----', file=sys.stderr, flush=True)
     url_dict = generate_tag_url_dict(out_dir+'/app')
     get_all_urls(proxy_list, url_dict, out_dir+'/tag')
+
+    tend = time.time()
+
+    print('----- DONE in {0:.2f} minutes -----'.format((tend-tstart)/60),
+          file=sys.stderr, flush=True)
