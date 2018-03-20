@@ -141,7 +141,7 @@ def get_all_urls(proxy_list, url_dict, out_dir,
     url_dict = {k:url_dict[k] for k in list(url_dict)}
 
     data = dict()
-    nretry = 100
+    nretry = 1000
     for i in range(nretry):
         print(': {} urls to retrieve (retry={})'.format(len(url_dict), i),
               file=sys.stderr, flush=True)
