@@ -79,4 +79,5 @@ The scripts uses Selenium `phantomjs` driver mostly (except for `get_composer_mi
 
 * pylint
 * argparse
+* to scrape http://midiworld.com/bach.htm
 
