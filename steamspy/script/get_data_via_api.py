@@ -188,7 +188,7 @@ def query(url, proxy_list, out_json, overwrite, timeout_connect, timeout_read,
         r = requests.get(url, proxies={'http':proxy},
                          timeout=(timeout_connect, timeout_read))
         data = json.loads(r.text)
-        if data:
+        if data or r.text.startswith('{}'):
             write_json(data, out_json)
     except:
         pass
