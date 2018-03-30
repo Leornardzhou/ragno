@@ -37,4 +37,7 @@ else:
         else:
             value = value[key]
 
-    print(json.dumps(value, sort_keys=True, indent=4))
+    if type(value) != dict:
+        print(value)
+    else:
+        print(json.dumps(value, sort_keys=True, indent=4))
