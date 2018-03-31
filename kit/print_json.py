@@ -23,7 +23,7 @@ else:
 
 if not field:
 
-    print(json.dumps(data, sort_keys=True, indent=4))
+    print(json.dumps(data, sort_keys=True, indent=4, ensure_ascii=False))
 
 else:
     value = data
@@ -37,7 +37,4 @@ else:
         else:
             value = value[key]
 
-    if type(value) != dict:
-        print(value)
-    else:
-        print(json.dumps(value, sort_keys=True, indent=4))
+    print(json.dumps(value, sort_keys=True, indent=4, ensure_ascii=False))
