@@ -93,7 +93,7 @@ def get_all_data(in_oid_list, out_dir, nproc=3, nretry=10, tsleep=1,
         oid = line.rstrip()
         oid_list.append(oid)
 
-    oid_list = oid_list[:100]
+    oid_list = oid_list
     args_list = []
     for oid in oid_list:
         oid_name = oid.replace(':', '.').lower()
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     in_oid_list = '../input/oid.list'
     out_dir = '../data/full_data'
     proxy_list = 'proxy.list'
-    get_all_data(in_oid_list, out_dir, nproc=3, nretry=100, tsleep=1,
+    get_all_data(in_oid_list, out_dir, nproc=8, nretry=100, tsleep=5,
                  proxy_list=proxy_list)
 
     dt.diff_time()
