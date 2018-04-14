@@ -23,10 +23,10 @@ def format_csv(timestamp):
                   jdata['title'].replace(',',''),
                   jdata['impact']['2016/2017']['ifact'],
                   jdata['impact']['2015']['ifact'],
-                  jdata['impact']['2015']['ifact'],
+                  jdata['impact']['2014']['ifact'],
                   jdata['impact']['2016/2017']['npub'],
                   jdata['impact']['2015']['npub'],
-                  jdata['impact']['2015']['npub'],
+                  jdata['impact']['2014']['npub'],
                   jdata['title_abbrev'].replace(',',''),
                   jdata['issn'].replace(',',''),
                   jdata['url'], sep=',', file=fout)
