@@ -101,8 +101,8 @@ def get_all_chapter_text(link_data, out_dir, tsleep=1, nproc=3, nretry=10):
     args_list = []
     for x in link_data:
         in_url = x['url']
-        out_json = '{}/book{}.chapter{}'.format(out_dir, x['book'],
-                                                x['chapter'])
+        out_json = '{}/book{}.chapter{}.json'.format(out_dir, x['book'],
+                                                     x['chapter'])
         args_list.append([in_url, out_json, tsleep])
 
     utils.parallel_call(get_chapter_text, args_list, nproc=nproc, nretry=nretry)
