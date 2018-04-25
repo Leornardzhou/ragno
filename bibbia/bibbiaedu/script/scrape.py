@@ -17,8 +17,8 @@ def get_chapter_text(in_url, out_json, tsleep):
     data = {}
     error = None
 
-    if os.path.isfile(out_json):
-        return data, error
+    # if os.path.isfile(out_json):
+    #     return data, error
 
     try:
         utils.qprint('get ' + in_url)
@@ -41,11 +41,12 @@ def get_chapter_text(in_url, out_json, tsleep):
         for line in s.split('\n'):
             if not line.startswith('<sup>'):
                 continue
-            x = re.findall(r'<sup><a class="numversetto" id="(.*?)" '
-                           'name="(.*?)">(.*?)</a></sup>(.*?)$', line)
+            # x = re.findall(r'<sup>.*?<a .*?>(.*?)</a></sup>(.*?)$', line)
+            x = re.findall(r'<a (.*?)>(.*?)</a></sup>(.*?)$', line)
             if not x:
                 continue
-            foo, foo, vers, phrase = x[0]
+            atag, vers, phrase = x[0]
+            vers = re.findall(r'name="VER_(.*?)"', atag)[0]
             phrase = re.sub(r'<.*?>', ' ', phrase)
             phrase = re.sub(r'\t', ' ', phrase)
             phrase = re.sub(r' +', ' ', phrase)
@@ -140,11 +141,12 @@ def test():
     in_url = 'http://www.bibbiaedu.it/testi/Bibbia_CEI_2008.Ricerca?Libro=1%20Re&capitolo=13&visintro=1&idp=2'
 
     in_url = 'http://www.bibbiaedu.it/pls/labibbia_new/Bibbia_Utils.elenco_capitoli?origine=cei2008&idlibroz=32'
+    in_url = 'http://www.bibbiaedu.it/testi/Bibbia_CEI_2008.Ricerca?Libro=Siracide&capitolo=17&visintro=0&idp=3'
     out_json = 'foo.json'
     tsleep = 0
 
-    # data, error = get_chapter_text(in_url, out_json, tsleep)
-    data, error = get_chapter_links(in_url, tsleep)
+    data, error = get_chapter_text(in_url, out_json, tsleep)
+    # data, error = get_chapter_links(in_url, tsleep)
 
     print(json.dumps(data, sort_keys=True, ensure_ascii=False, indent=2))
     print(error)
