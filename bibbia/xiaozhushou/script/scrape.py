@@ -42,13 +42,22 @@ def get_chapter_text(in_url, out_json, tsleep):
             data['book'] = None
             data['chapter'] = None
 
+        phrase_set = set()
         data['content'] = []
         for x in text.xpath('//div[@id="bible_chapter_content"]/*'):
+            t = {'vers': None, 'text': None}
             if x.tag == 'p':
                 t = {'vers': x.get('value'), 'text': x.text.split('  ', 1)[-1]}
             else:
                 t = {'vers': '', 'text': x.text}
-            data['content'].append(t)
+            if t['vers'] == None and t['text'] == None:
+                raise Exception('can not extract content from "{}" (url={})'
+                                .format(x.text, in_url))
+            # avoid duplicate entry
+            phrase = '|{}|{}|'.format(t['vers'], t['text'])
+            if phrase not in phrase_set:
+                data['content'].append(t)
+                phrase_set.add(phrase)
 
         utils.write_json(data, out_json)
         data = {}
@@ -128,12 +137,12 @@ def get_all_chapter_links(out_json, tsleep=1, nproc=3, nretry=10):
 def test():
 
     # in_url = 'https://www.xiaozhushou.org/index.php/?m=bible&template=23&chapter=0'
-    in_url = 'https://www.xiaozhushou.org/index.php/?m=bible&template=16&chapter=0'
+    in_url = 'https://www.xiaozhushou.org/index.php/?m=bible&template=26&chapter=3'
     out_json = 'foo.json'
     tsleep = 0
 
-    # data, error = get_chapter_text(in_url, out_json, tsleep)
-    data, error = get_chapter_links(in_url, tsleep)
+    data, error = get_chapter_text(in_url, out_json, tsleep)
+    # data, error = get_chapter_links(in_url, tsleep)
 
     print(json.dumps(data, sort_keys=True, ensure_ascii=False, indent=2))
     print(error)
