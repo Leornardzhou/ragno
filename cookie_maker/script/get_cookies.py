@@ -6,7 +6,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import requests
-
+import datetime
 
 def qprint(msg):
     print(':: ' + msg, file=sys.stderr, flush=True)
@@ -86,6 +86,10 @@ def login_6park(driver, config):
 
 def get_cookies(in_config_json, out_cookie_json, headless=True):
 
+    fmt_str = "%Y%m%d%H"   # yyyymmddhh
+    time_stamp = datetime.datetime.now().strftime(fmt_str)
+    out_cookie_json = '{}.{}.json'.format(out_cookie_json.replace('.json',''),
+                                          time_stamp)
     config = read_json(in_config_json)
 
     try:
