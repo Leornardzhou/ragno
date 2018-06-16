@@ -39,7 +39,7 @@ def write_text(in_str, out_text):
     fout.close()
 
 
-def read_json(in_text):
+def read_text(in_text):
 
     out_str = qopen(in_text).read()
     return out_str
