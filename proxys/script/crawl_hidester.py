@@ -55,7 +55,7 @@ def qopen(fname, mode='r', verbose=True):
         return gzip.open(fname, mode)
     else:
         return open(fname, mode)
-        
+
 
 # -------------------------------------------------------------------------
 
@@ -85,24 +85,24 @@ def read_json(json_name, verbose=True):
 # -------------------------------------------------------------------------
 
 def get_proxy_all_pages(driver):
-    
+
     out = dict()
-    
+
     url = 'https://hidester.com/proxylist'
 
     qprint('get url {}'.format(url))
     driver.get(url)
-    driver.execute_script("window.scrollTo(0, 1100)") 
     time.sleep(3)
-    
+
     for i in range(1,6):
         qprint('open page {}'.format(i))
+        driver.execute_script("window.scrollTo(0, 1400)")
         for a in driver.find_elements_by_xpath('//a[@ng-click="selectPage(page.number, $event)"]'):
             if a.text == str(i):
                 a.click()
                 break
         time.sleep(2)
-        
+
         for tr in driver.find_elements_by_xpath('//tbody/tr'):
             tmp = []
             for td in tr.find_elements_by_xpath('./td'):
@@ -115,20 +115,20 @@ def get_proxy_all_pages(driver):
                 'ping': tmp[6], 'anonymity': tmp[7], 'google': tmp[8],
             }
             out[key] = value
-            
-        print('found {} proxies'.format(len(out)))
-        
+
+        qprint('found {} proxies'.format(len(out)))
+
     return out
 
 # -------------------------------------------------------------------------
 
 def write_output(data, out_json):
-    
+
     out = []
     for key, value in sorted(data.items()):
         out.append('{}\t{}'.format(
             key, json.dumps(value, sort_keys=True)))
-        
+
     if not out_json.endswith('.gz'):
         out_json = out_json + '.gz'
     fout = qopen(out_json, 'wb')
@@ -141,14 +141,15 @@ def write_output(data, out_json):
 def crawl_hidester(out_json):
 
     options = webdriver.ChromeOptions()
-    # options.add_argument('headless')
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument('headless')
     driver = webdriver.Chrome(chrome_options=options)
 
     data = get_proxy_all_pages(driver)
     qprint('total number of proxies = {}'.format(len(data)))
 
     write_output(data, out_json)
-    
+
     driver.close()
 
 # -------------------------------------------------------------------------
