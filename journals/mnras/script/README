@@ -1,0 +1,4 @@
+# 1. get_all_xml.py
+
+# 2 .
+for f in $(find ../data/xml -name "*.xml"); do cat $f; done | grep -v .xml$ | grep -v .xml? | grep -v /$ | grep -v pdf$ | grep -v PDF$ > articles.$(date +%Y%m%d%H).list
