@@ -11,11 +11,13 @@ from classicalarchives import utils
 
 def make_track_list(composers_list_fname, out_list_fname):
 
+    data_dir = os.path.dirname(composers_list_fname)
+
     fout = open(out_list_fname, 'w')
     for composer_id in open(composers_list_fname):
 
         composer_id = composer_id.rstrip()
-        composer_json = '{}/data/composer/{}.json'.format(root_dir, composer_id)
+        composer_json = '{}/composer/{}.json'.format(data_dir, composer_id)
         composer = utils.load_json(composer_json, verbose=False)
         composer_id = composer['composer_id'].replace('composer_','')
         for work in composer['work_list']:
