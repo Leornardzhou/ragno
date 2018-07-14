@@ -1,6 +1,8 @@
 # 1. get_all_xml.py
 
 # 2
-for f in $(find ../data/xml -name "*.xml"); do cat $f; done | grep -v .xml$ | grep -v .xml? | grep -v /$ > articles.$(date +%Y%m%d%H).list
+# for f in $(find ../data/xml -name "*.xml"); do cat $f; done | grep -v .xml$ | grep -v .xml? | grep -v /$ > articles.$(date +%Y%m%d%H).list
+for f in $(find ../data/xml -name "*.xml"); do cat $f; done | grep -v .xml$ | grep -v .xml? | grep -v /$ | grep -e /0004-637X/ -e /2041-8205/ -e /0067-0049/ -e /1475-7516/ > articles.$(date +%Y%m%d%H).core.list
+
 
 # 3. python3 down_public.py articles.xxx.list
