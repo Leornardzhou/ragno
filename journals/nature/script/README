@@ -1,0 +1,8 @@
+1. recursively get all xmls included in the sitemap (overwrite to ../data/xml, will not skip existing ones).
+get_all_xml.py
+
+2. download public version of pages (incremental download, skip existing, write to ../data/html/public)
+for f in $(find ../data/xml -name "articles.xml"); do cat $f; done > articles.$(date +%Y%m%d%H).list
+down_public.py
+
+access-options-list in page means private
