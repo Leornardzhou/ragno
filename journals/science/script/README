@@ -1,0 +1,13 @@
+http://science.sciencemag.org/sitemap.xml
+http://advances.sciencemag.org/sitemap.xml
+http://stm.sciencemag.org/sitemap.xml
+http://stke.sciencemag.org/sitemap.xml
+http://immunology.sciencemag.org/sitemap.xml
+http://robotics.sciencemag.org/sitemap.xml
+
+1. get_all_xml.py
+
+2 .
+for f in $(find ../data/xml -name "*.xml"); do cat $f; done | grep -v .xml$ | grep -v .xml? | grep -v /$ > articles.$(date +%Y%m%d%H).list
+
+
