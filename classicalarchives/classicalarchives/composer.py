@@ -195,9 +195,16 @@ class Work:
 
 
     def get_current_page_elem(self):
-        page_elem = self.work_elem.find_element_by_xpath(
-            '..//*[@class="performance"]/..')
-        return page_elem
+        '''fix only for https://www.classicalarchives.com/midi/composer/2937.html
+        Symphony No.6 in A- ('Tragic')
+        Unable to retrieve performance details.
+        '''
+        try:
+            page_elem = self.work_elem.find_element_by_xpath(
+                '..//*[@class="performance"]/..')
+            return page_elem
+        except:
+            return None
 
 
     def get_page_by_id(self, page_id):
@@ -217,6 +224,8 @@ class Work:
                 self.goto_page_by_id(i+1)
                 # utils.wait(2)  # allow time to update the page elements in the html
                 page_elem = self.get_current_page_elem()
+                if not page_elem:
+                    continue
                 # utils.wait(2)  # allow time to update the page elements in the html
                 page = Page(self.driver, page_elem)
                 page.get_all_tracks()
@@ -239,8 +248,9 @@ class Work:
                     'expect {} found {} (#retry = {})'
                     .format(self.work_id, self.title, self.ntrack,
                             ntrack, nretry))
-            if nretry == 20:
-                sys.exit(1)
+            if nretry == 10:
+                break
+                # sys.exit(1)
 
         self.page_list = page_list
 
