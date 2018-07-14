@@ -78,7 +78,11 @@ def get_all_xml():
     out_dir = '../data/xml'
 
     xml_todo = {
-        "http://iopscience.iop.org/sitemap.xml",
+        # "http://iopscience.iop.org/sitemap.xml",
+        "http://iopscience.iop.org/sitemap_for_journal_0004-637X.xml",
+        "http://iopscience.iop.org/sitemap_for_journal_0067-0049.xml",
+        "http://iopscience.iop.org/sitemap_for_journal_1475-7516.xml",
+        "http://iopscience.iop.org/sitemap_for_journal_2041-8205.xml",
     }
     xml_done = set()
 
