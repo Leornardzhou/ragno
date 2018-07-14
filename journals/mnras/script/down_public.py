@@ -82,6 +82,8 @@ def read_json(json_name, verbose=True):
 
 def down_public(in_name, out_dir, sleep_time=0):
 
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+
     todo_set = set()
     for line in qopen(in_name):
         url = line.rstrip()
@@ -98,7 +100,7 @@ def down_public(in_name, out_dir, sleep_time=0):
             os.makedirs(tmp_out_dir, exist_ok=True)
 
             try:
-                r = requests.get(url)
+                r = requests.get(url, headers=headers)
                 write_text(r.text, out_name + '.gz')
                 time.sleep(sleep_time)
 
