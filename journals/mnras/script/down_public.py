@@ -114,7 +114,7 @@ def down_public(in_name, out_dir, sleep_time=0):
 if __name__ == '__main__':
 
     article_list = sys.argv[1]
-    down_public(article_list, '../data/html/public', sleep_time=0.8)
+    down_public(article_list, '../data/html/public', sleep_time=0)
 
 
 # end
