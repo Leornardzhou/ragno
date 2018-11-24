@@ -167,7 +167,10 @@ if __name__ == '__main__':
     cwd = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.abspath(os.path.join(cwd, '../data'))
 
-    timestamp = get_timestamp(fmt_str="%Y%m%d%H")
+    if len(sys.argv) == 1:
+        timestamp = get_timestamp(fmt_str="%Y%m%d%H")
+    else:
+        timestamp = sys.argv[1]
     down_dir = '{}/html/www.genomeweb.com'.format(data_dir)
     todo_list = '{}/sitemap/url_todo_{}.list.gz'.format(data_dir, timestamp)
     create_list(down_dir, todo_list)

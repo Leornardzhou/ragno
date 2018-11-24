@@ -89,6 +89,7 @@ def down_list(todo_list, cookie_name, data_dir, sleep_time=2.5):
         s.cookies.set(c['name'], c['value'])
 
     todo_set = set(read_text(todo_list).rstrip().split('\n'))
+    todo_set = {x for x in todo_set if x.startswith('https://')}
     qprint('found {} urls in todo list {}'.format(len(todo_set), todo_list))
 
     niter = 0
@@ -132,7 +133,8 @@ if __name__ == '__main__':
     data_dir = os.path.abspath(os.path.join(cwd, '../data'))
 
     # todo_list = '../data/sitemap/url_todo_2018062814.list.gz'
-    todo_list = sys.argv[1]
+    timestamp = sys.argv[1]
+    todo_list = '../data/sitemap/url_todo_{}.list.gz'.format(timestamp)
     cookie_name = 'cookies/cookies.genomeweb.2018061522.json'
     down_dir = '{}/html/www.genomeweb.com'.format(data_dir)
     down_list(todo_list, cookie_name, down_dir)
